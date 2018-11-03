@@ -7,7 +7,7 @@ class Scale:
         self.score = 0
 
     def __repr__(self):
-        return f'Scale({self.name}, {self.number}, {self.yanswers}, {self.nanswers}, {self.score}'
+        return f'Scale({self.name}, {self.number}, {self.yanswers}, {self.nanswers}, {self.score})'
 
     def check_answer(self, question_numbers, answer):
         if answer == 'Да' and question_numbers in self.yanswers:
