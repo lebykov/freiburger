@@ -1,10 +1,10 @@
 import csv
 import sys
-from freiburger_evaluator import respondent, scale
+from freiburger_evaluator import respondent, scale, evaluator
 import json
 
 
-def load_respondents(answers_file):
+def load_respondents(answers_file, scales):
     with open(answers_file, encoding="utf8", newline='') as f:
         respondents = []
         reader = csv.reader(f)
@@ -17,12 +17,13 @@ def load_respondents(answers_file):
                 name=user_info[2],
                 date_of_birth=user_info[3],
                 date_of_test=user_info[4],
-                answers=user_answers
+                answers=user_answers,
+                scales=scales
             )
             respondents.append(r)
-            print("added new respondent")
-            print(r)
-            print('\n\n\n')
+            # print("added new respondent")
+            # print(r)
+            # print('\n')
         return respondents
 
 
@@ -34,20 +35,27 @@ def load_scales(scales_file):
                 number=obj["number"],
                 name=obj["name"],
                 yanswers={*obj["yanswers"]},
-                nanswers={*obj["nanswers"]}
+                nanswers={*obj["nanswers"]},
+                standard_keys=obj["standard_keys"]
             )
             scales.append(s)
-            print("added new scale")
-            print(s)
-            print('\n\n\n')
+            # print("added new scale")
+            # print(s)
+            # print('\n')
         return scales
 
 
 def main(answers_file, scales_file):
-    loaded_respondents = load_respondents(answers_file)
-    print(f'laded {len(loaded_respondents)} respondents')
     loaded_scales = load_scales(scales_file)
-    print(f'laded {len(loaded_scales)} scales')
+    print(f'loaded {len(loaded_scales)} scales')
+    loaded_respondents = load_respondents(answers_file, loaded_scales)
+    print(f'loaded {len(loaded_respondents)} respondents')
+    for r in loaded_respondents:
+        e = evaluator.Evaluator(r)
+        e.evaluate_raw_scores()
+        e.evaluate_standard_scores()
+        print(r.compose_summary())
+        print('\n\n')
 
 
 if __name__ == '__main__':
