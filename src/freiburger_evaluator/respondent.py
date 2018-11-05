@@ -21,9 +21,11 @@ class Respondent:
     def compose_summary(self):
         number_literal = '#'
         name_literal = 'Название шкалы'
+        raw_literal = 'Сырые'
         score_literal = 'Баллы'
         number_col_width = 3
         name_col_width = 26
+        raw_col_width = 5
         score_col_width = 5
         summary = f'********************************************************\n' \
                   f'Результаты обработки Фрайбургского личностного опросника\n' \
@@ -31,10 +33,10 @@ class Respondent:
                   f'Дата тестирования: {self.date_of_test}\nФИО: {self.name}\n' \
                   f'email: {self.email}\nДата рожденя: {self.date_of_birth}\n' \
                   f'Баллы по стандартной шкале\n' \
-                  f'{number_literal:^{number_col_width}} {name_literal:^{name_col_width}} {score_literal:^{score_col_width}}\n'
+                  f'{number_literal:^{number_col_width}} {name_literal:^{name_col_width}} {raw_literal:^{raw_col_width}} {score_literal:^{score_col_width}}\n'
 
         for scale in self.scales:
-            summary += f'{scale.number:>{number_col_width}} {scale.name:<{name_col_width}} {scale.standard_score:>{score_col_width}}\n'
+            summary += f'{scale.number:>{number_col_width}} {scale.name:<{name_col_width}} {scale.raw_score:>{raw_col_width}} {scale.standard_score:>{score_col_width}}\n'
 
         return summary
 

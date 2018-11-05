@@ -1,61 +1,48 @@
-import csv
 import sys
-from freiburger_evaluator import respondent, scale, evaluator
-import json
+from freiburger_evaluator import evaluator, utils
 
 
-def load_respondents(answers_file, scales):
-    with open(answers_file, encoding="utf8", newline='') as f:
-        respondents = []
-        reader = csv.reader(f)
-        for row in reader:
-            user_info = row[:5]
-            user_answers = row[5:]
-            r = respondent.Respondent(
-                start_timestamp=user_info[0],
-                email=user_info[1],
-                name=user_info[2],
-                date_of_birth=user_info[3],
-                date_of_test=user_info[4],
-                answers=user_answers,
-                scales=scales
-            )
-            respondents.append(r)
-            # print("added new respondent")
-            # print(r)
-            # print('\n')
-        return respondents
-
-
-def load_scales(scales_file):
-    with open(scales_file, 'r') as f:
-        scales = []
-        for obj in json.load(f):
-            s = scale.Scale(
-                number=obj["number"],
-                name=obj["name"],
-                yanswers={*obj["yanswers"]},
-                nanswers={*obj["nanswers"]},
-                standard_keys=obj["standard_keys"]
-            )
-            scales.append(s)
-            # print("added new scale")
-            # print(s)
-            # print('\n')
-        return scales
+def print_all_summaries(respondents):
+    for r in respondents:
+        print(r.compose_summary())
+        print('\n\n')
 
 
 def main(answers_file, scales_file):
-    loaded_scales = load_scales(scales_file)
-    print(f'loaded {len(loaded_scales)} scales')
-    loaded_respondents = load_respondents(answers_file, loaded_scales)
-    print(f'loaded {len(loaded_respondents)} respondents')
+    loaded_scales = utils.load_scales(scales_file)
+    print(f'Загрузил таблицу с {len(loaded_scales)} шкалами')
+    loaded_respondents = utils.load_respondents(answers_file, loaded_scales)
+    print(f'Уф-ф-ф, загрузил {len(loaded_respondents)} опросников')
     for r in loaded_respondents:
         e = evaluator.Evaluator(r)
         e.evaluate_raw_scores()
         e.evaluate_standard_scores()
-        print(r.compose_summary())
-        print('\n\n')
+    print('>>> Чтобы вывести баллы введите номер нужного опросника и нажмите Enter')
+    print('>>> Чтобы вывести быллы всех опросников введите 0 и нажмите Enter')
+    print('>>> Для выхода введите q')
+    print('Опросники')
+    for n, r in enumerate(loaded_respondents):
+        print(f'{n}. {r.name} {r.email} {r.start_timestamp}')
+    print('\n')
+
+    user_input = input("Введите номер опросника или q для выхода: ")
+    while user_input != 'q':
+        if not user_input.isdigit():
+            print(f"Вы ввели \"{user_input}\" вместо номера, попробуйте еще раз =)")
+            user_input = input("Введите номер опросника или q для выхода: ")
+            continue
+        num = int(user_input)
+        if 0 > num or num > len(loaded_respondents) - 1:
+            print(f'Вы ввели номер {user_input}. Я могу показать результаты для номеров с 0 по {len(loaded_respondents) - 1}')
+            user_input = input("Введите номер опросника или q для выхода: ")
+            continue
+        if num == 0:
+            print_all_summaries(loaded_respondents)
+        else:
+            r = loaded_respondents[num]
+            print(r.compose_summary())
+        user_input = input("Введите номер опросника или q для выхода: ")
+    print("До новых встреч, друзья!")
 
 
 if __name__ == '__main__':
