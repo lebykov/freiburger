@@ -1,5 +1,5 @@
 import sys
-from freiburger_evaluator import evaluator, utils
+from freiburger_evaluator import evaluator, utils, diagram
 
 
 def print_all_summaries(respondents):
@@ -41,6 +41,7 @@ def main(answers_file, scales_file):
         else:
             r = loaded_respondents[num]
             print(r.compose_summary())
+            diagram.draw_profile(r)
         user_input = input("Введите номер опросника или q для выхода: ")
     print("До новых встреч, друзья!")
 
