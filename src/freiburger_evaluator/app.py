@@ -8,23 +8,30 @@ def print_all_summaries(respondents):
         print('\n\n')
 
 
-def main(answers_file, scales_file):
+def main(inventory_name, answers_file, scales_file):
     # Refactoring
 
     # loaded_scales = utils.load_scales(scales_file)
     # print(f'Загрузил таблицу с {len(loaded_scales)} шкалами')
     # loaded_respondents = utils.load_respondents(answers_file, loaded_scales)
 
-    the_loader = loader.Loader.factory('frei', answers_file, scales_file)
+    the_loader = loader.Loader.factory(inventory_name, answers_file, scales_file)
     loaded_respondents = the_loader.load_respondents()
 
     # end Refactoring
 
     print(f'Уф-ф-ф, загрузил {len(loaded_respondents)} опросников')
+    # Refactoring
+
     for r in loaded_respondents:
-        e = evaluator.Evaluator(r)
-        e.evaluate_raw_scores()
-        e.evaluate_standard_scores()
+        # e = evaluator.Evaluator(r)
+        # e.evaluate_raw_scores()
+        # e.evaluate_standard_scores()
+        e = evaluator.Evaluator.factory(inventory_name, r)
+        e.evaluate_respondent()
+
+    # end Refactoring
+
     print('>>> Чтобы вывести баллы введите номер нужного опросника и нажмите Enter')
     print('>>> Чтобы вывести быллы всех опросников введите 0 и нажмите Enter')
     print('>>> Для выхода введите q')
@@ -55,4 +62,4 @@ def main(answers_file, scales_file):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
