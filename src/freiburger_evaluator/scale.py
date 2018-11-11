@@ -15,6 +15,7 @@ class FreiburgerScale(Scale):
         self.standard_keys = standard_keys
         self.raw_score = 0
         self.standard_score = 0
+        self.check_defaults()
 
     def __repr__(self):
         return f'Scale(\n\tname={self.name}, \n\tnumber={self.number}, \n\tyanswers={self.yanswers}, ' \
@@ -29,3 +30,7 @@ class FreiburgerScale(Scale):
 
     def convert_to_standard(self):
         self.standard_score = self.standard_keys[self.raw_score]
+
+    def check_defaults(self):
+        assert self.raw_score == 0
+        assert self.standard_score == 0

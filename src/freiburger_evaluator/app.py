@@ -1,10 +1,11 @@
 import sys
-from freiburger_evaluator import evaluator, utils, diagram, loader
+from freiburger_evaluator import evaluator, utils, diagram, loader, reporter
 
 
-def print_all_summaries(respondents):
+def print_all_summaries(inventory_name, respondents):
     for r in respondents:
-        print(r.compose_summary())
+        # print(r.compose_summary())
+        print(reporter.Reporter.factory(inventory_name, r).compose_summary())
         print('\n\n')
 
 
@@ -52,11 +53,17 @@ def main(inventory_name, answers_file, scales_file):
             user_input = input("Введите номер опросника или q для выхода: ")
             continue
         if num == 0:
-            print_all_summaries(loaded_respondents)
+            print_all_summaries(inventory_name, loaded_respondents)
         else:
             r = loaded_respondents[num]
-            print(r.compose_summary())
+            # Refactoring
+            # print(r.compose_summary())
+            # diagram.draw_profile(r)
+
+            print(reporter.Reporter.factory(inventory_name, r).compose_summary())
             diagram.draw_profile(r)
+
+            # end Refactoring
         user_input = input("Введите номер опросника или q для выхода: ")
     print("До новых встреч, друзья!")
 
