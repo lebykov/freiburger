@@ -1,5 +1,13 @@
-class Scale:
+class Scale(object):
+    @staticmethod
+    def factory(scale_name, **kwargs):
+        if scale_name == 'frei':
+            return FreiburgerScale(**kwargs)
+
+
+class FreiburgerScale(Scale):
     def __init__(self, number, name, yanswers, nanswers, standard_keys):
+        super().__init__()
         self.number = number
         self.name = name
         self.yanswers = yanswers

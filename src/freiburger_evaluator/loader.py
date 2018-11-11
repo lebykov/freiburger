@@ -1,6 +1,5 @@
 import csv
 import json
-import random
 from freiburger_evaluator import respondent, scale
 
 
@@ -48,7 +47,8 @@ class FreiburgerLoader(Loader):
         with open(scales_file, 'r') as f:
             scales = []
             for obj in json.load(f):
-                s = scale.Scale(
+                s = scale.Scale.factory(
+                    scale_name='frei',
                     number=obj["number"],
                     name=obj["name"],
                     yanswers={*obj["yanswers"]},
