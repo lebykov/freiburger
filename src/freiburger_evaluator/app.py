@@ -1,5 +1,5 @@
 import sys
-from freiburger_evaluator import evaluator, utils, diagram
+from freiburger_evaluator import evaluator, utils, diagram, loader
 
 
 def print_all_summaries(respondents):
@@ -9,9 +9,17 @@ def print_all_summaries(respondents):
 
 
 def main(answers_file, scales_file):
-    loaded_scales = utils.load_scales(scales_file)
-    print(f'Загрузил таблицу с {len(loaded_scales)} шкалами')
-    loaded_respondents = utils.load_respondents(answers_file, loaded_scales)
+    # Refactoring
+
+    # loaded_scales = utils.load_scales(scales_file)
+    # print(f'Загрузил таблицу с {len(loaded_scales)} шкалами')
+    # loaded_respondents = utils.load_respondents(answers_file, loaded_scales)
+
+    the_loader = loader.Loader.factory('frei', answers_file, scales_file)
+    loaded_respondents = the_loader.load_respondents()
+
+    # end Refactoring
+
     print(f'Уф-ф-ф, загрузил {len(loaded_respondents)} опросников')
     for r in loaded_respondents:
         e = evaluator.Evaluator(r)
