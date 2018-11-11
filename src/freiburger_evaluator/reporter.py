@@ -6,6 +6,8 @@ class Reporter(object):
     def factory(reporter_name, respondent):
         if reporter_name == 'frei':
             return FreiburgerReporter(respondent)
+        elif reporter_name == 'cat':
+            return CatReporter(respondent)
 
 
 class FreiburgerReporter(Reporter):
@@ -28,5 +30,27 @@ class FreiburgerReporter(Reporter):
 
         for scale in self.respondent.scales:
             summary += f'{scale.number:>{number_col_width}} {scale.name:<{name_col_width}} {scale.raw_score:>{raw_col_width}} {scale.standard_score:>{score_col_width}}\n'
+
+        return summary
+
+
+class CatReporter(Reporter):
+    def compose_summary(self):
+        number_literal = '#'
+        name_literal = 'Название шкалы'
+        raw_literal = 'Сырые'
+        number_col_width = 3
+        name_col_width = 33
+        raw_col_width = 5
+        summary = f'************************************************\n' \
+                  f'Результаты обработки Самоактуализационного теста\n' \
+                  f'************************************************\n' \
+                  f'Дата тестирования: {self.respondent.date_of_test}\nФИО: {self.respondent.name}\n' \
+                  f'email: {self.respondent.email}\nДата рожденя: {self.respondent.date_of_birth}\n' \
+                  f'Баллы по стандартной шкале\n' \
+                  f'{number_literal:^{number_col_width}} {name_literal:^{name_col_width}} {raw_literal:^{raw_col_width}}\n'
+
+        for scale in self.respondent.scales:
+            summary += f'{scale.number:>{number_col_width}} {scale.name:<{name_col_width}} {scale.raw_score:>{raw_col_width}}\n'
 
         return summary

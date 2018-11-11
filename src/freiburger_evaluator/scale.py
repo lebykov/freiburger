@@ -42,7 +42,7 @@ class CatScale(Scale):
     def __init__(self, number, name, aanswers, banswers):
         super().__init__()
         self.number = number
-        self.name = name,
+        self.name = name
         self.aanswers = aanswers
         self.banswers = banswers
         self.raw_score = 0

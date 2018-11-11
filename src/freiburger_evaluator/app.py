@@ -61,7 +61,8 @@ def main(inventory_name, answers_file, scales_file):
             # diagram.draw_profile(r)
 
             print(reporter.Reporter.factory(inventory_name, r).compose_summary())
-            diagram.draw_profile(r)
+            if inventory_name == 'frei':
+                diagram.draw_profile(r)
 
             # end Refactoring
         user_input = input("Введите номер опросника или q для выхода: ")

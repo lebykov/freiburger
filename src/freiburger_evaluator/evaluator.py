@@ -35,13 +35,13 @@ class FreiburgerEvaluator(Evaluator):
 
 class CatEvaluator(Evaluator):
     def _evaluate_raw_scores(self):
-        print(f'\nevaluate_raw_scores()')
-        print(f'\tanswers:{self.respondent.answers}')
-        print(f'\tscales: {self.respondent.scales}')
+        # print(f'\nevaluate_raw_scores()')
+        # print(f'\tanswers:{self.respondent.answers}')
+        # print(f'\tscales: {self.respondent.scales}')
         for num, ans in enumerate(self.respondent.answers):
-            print(f'\tnum, ans: {num}, {ans}')
+            # print(f'\tnum, ans: {num}, {ans}')
             for scale in self.respondent.scales:
-                print(f'\tscale:{scale}')
+                # print(f'\tscale:{scale}')
                 scale.check_answer(num + 1, ans)
 
     def evaluate_respondent(self):
