@@ -38,7 +38,7 @@ def main(inventory_name, answers_file, scales_file):
     print('>>> Для выхода введите q')
     print('Опросники')
     for n, r in enumerate(loaded_respondents):
-        print(f'{n}. {r.name} {r.email} {r.start_timestamp}')
+        print(f'{n + 1}. {r.name} {r.email} {r.start_timestamp}')
     print('\n')
 
     user_input = input("Введите номер опросника или q для выхода: ")
@@ -48,14 +48,14 @@ def main(inventory_name, answers_file, scales_file):
             user_input = input("Введите номер опросника или q для выхода: ")
             continue
         num = int(user_input)
-        if 0 > num or num > len(loaded_respondents) - 1:
-            print(f'Вы ввели номер {user_input}. Я могу показать результаты для номеров с 0 по {len(loaded_respondents) - 1}')
+        if 0 > num or num > len(loaded_respondents):
+            print(f'Вы ввели номер {user_input}. Я могу показать результаты для номеров с 1 по {len(loaded_respondents)}')
             user_input = input("Введите номер опросника или q для выхода: ")
             continue
         if num == 0:
             print_all_summaries(inventory_name, loaded_respondents)
         else:
-            r = loaded_respondents[num]
+            r = loaded_respondents[num - 1]
             # Refactoring
             # print(r.compose_summary())
             # diagram.draw_profile(r)

@@ -10,14 +10,18 @@ class Loader(object):
         self.scales = []
 
     def load_respondents(self):
-        self.scales = self._load_scales(self.scales_file)
+        self.scales = self._load_scales()
         print(f'Загрузил таблицу с {len(self.scales)} шкалами')
         with open(self.answers_file, encoding="utf8", newline='') as f:
             respondents = []
             reader = csv.reader(f)
-            for row in reader:
+            for n, row in enumerate(reader):
+                # skip first line since it is table headers
+                if n == 0:
+                    continue
                 user_info = row[:5]
                 user_answers = row[5:]
+                self._validate_answers(user_answers)
                 r = respondent.Respondent(
                     start_timestamp=user_info[0],
                     email=user_info[1],
@@ -33,7 +37,10 @@ class Loader(object):
                 # print('\n')
             return respondents
 
-    def _load_scales(self, scales_file):
+    def _load_scales(self):
+        raise NotImplementedError
+
+    def _validate_answers(self, answers):
         raise NotImplementedError
 
     @staticmethod
@@ -43,8 +50,8 @@ class Loader(object):
 
 
 class FreiburgerLoader(Loader):
-    def _load_scales(self, scales_file):
-        with open(scales_file, 'r') as f:
+    def _load_scales(self):
+        with open(self.scales_file, 'r') as f:
             scales = []
             for obj in json.load(f):
                 s = scale.Scale.factory(
@@ -60,4 +67,15 @@ class FreiburgerLoader(Loader):
                 # print(s)
                 # print('\n')
             return scales
+
+    def _validate_answers(self, answers):
+        assert len(answers) == 114
+        # print(f'number of empty answers: {answers.count("")}')
+        # print(f'number of Да  answers: {answers.count("Да")}')
+        # print(f'number of Нет answers: {answers.count("Нет")}')
+        unique_answers = set(answers)
+        # print(unique_answers)
+        assert len(unique_answers) in {2, 3}
+        assert 'Да' in unique_answers
+        assert 'Нет' in unique_answers
 
